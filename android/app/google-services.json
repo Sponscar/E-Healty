@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1087211735712",
+    "project_id": "e-healty-4d587",
+    "storage_bucket": "e-healty-4d587.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1087211735712:android:b2e18d8448406fbc8a57c5",
+        "android_client_info": {
+          "package_name": "com.example.e_healty"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsah9W8qvSCWG-KVVIcGebV3JSC5IkEZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
