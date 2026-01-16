@@ -12,8 +12,7 @@ class FirebaseAuthDatasource {
     }
     return phone;
   }
-
-  // ================= REGISTER =================
+  
   Future<UserModel> register(
     String email,
     String password,
@@ -36,7 +35,6 @@ class FirebaseAuthDatasource {
       role: 'user',
     );
 
-    // 2️⃣ SIMPAN KE FIRESTORE (PAKAI UID)
     await _firestore
         .collection('users')
         .doc(uid)
@@ -45,7 +43,6 @@ class FirebaseAuthDatasource {
     return user;
   }
 
-  // ================= LOGIN =================
   Future<UserModel> login(String email, String password) async {
     final result = await _auth.signInWithEmailAndPassword(
       email: email,
