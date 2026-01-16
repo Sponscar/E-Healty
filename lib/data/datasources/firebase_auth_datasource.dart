@@ -1,33 +1,66 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/user_model.dart';
 
 class FirebaseAuthDatasource {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<User?> register({
-    required String email,
-    required String password,
-  }) async {
-    final credential = await _auth.createUserWithEmailAndPassword(
+  String formatPhone(String phone) {
+    if (phone.startsWith("08")) {
+      return "+62${phone.substring(1)}";
+    }
+    return phone;
+  }
+
+  // ================= REGISTER =================
+  Future<UserModel> register(
+    String email,
+    String password,
+    String name,
+    String phoneNumber,
+  ) async {
+    // 1️⃣ BUAT AKUN AUTH
+    final result = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
-    return credential.user;
+
+    final uid = result.user!.uid;
+
+    final user = UserModel(
+      uid: uid,
+      email: email,
+      name: name,
+      phoneNumber: formatPhone(phoneNumber),
+      role: 'user',
+    );
+
+    // 2️⃣ SIMPAN KE FIRESTORE (PAKAI UID)
+    await _firestore
+        .collection('users')
+        .doc(uid)
+        .set(user.toMap());
+
+    return user;
   }
 
-  Future<User?> login({
-    required String email,
-    required String password,
-  }) async {
-    final credential = await _auth.signInWithEmailAndPassword(
+  // ================= LOGIN =================
+  Future<UserModel> login(String email, String password) async {
+    final result = await _auth.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
-    return credential.user;
+
+    final doc = await _firestore
+        .collection('users')
+        .doc(result.user!.uid)
+        .get();
+
+    return UserModel.fromMap(doc.data()!);
   }
 
-  Future<void> logout() async {
+  Future logout() async {
     await _auth.signOut();
   }
-
-  User? get currentUser => _auth.currentUser;
 }
