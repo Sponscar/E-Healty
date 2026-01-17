@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
@@ -43,6 +46,25 @@ class FirebaseAuthDatasource {
     return user;
   }
 
+  Future<void> updateUserProfile({
+    required String uid,
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .update({
+        'name': name,
+        'phoneNumber': phone,
+      });
+    } catch (e) {
+      throw Exception("Gagal update profile: $e");
+    }
+  }
+
+
   Future<UserModel> login(String email, String password) async {
     final result = await _auth.signInWithEmailAndPassword(
       email: email,
@@ -55,6 +77,30 @@ class FirebaseAuthDatasource {
         .get();
 
     return UserModel.fromMap(doc.data()!);
+  }
+
+  Future<void> updatePhotoBase64({
+    required String uid,
+    required String base64,
+  }) async {
+    await _firestore.collection('users').doc(uid).update({
+      "photoBase64": base64,
+    });
+  }
+
+
+  Future<void> updatePhotoPath(String uid, String path) async {
+    try {
+      final bytes = await File(path).readAsBytes();
+      final base64Image = base64Encode(bytes);
+
+      await _firestore.collection('users').doc(uid).update({
+        "photoBase64": base64Image,
+      });
+
+    } catch (e) {
+      throw Exception("Gagal simpan foto: $e");
+    }
   }
 
   Future logout() async {
