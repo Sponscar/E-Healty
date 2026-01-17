@@ -1,74 +1,224 @@
-import 'package:e_healty/data/datasources/firebase_auth_datasource.dart';
-import 'package:e_healty/presentation/pages/auth/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../core/constants/app_routes.dart';
+import '../../../core/utils/validators.dart';
+import '../../../core/widgets/custom_button.dart';
+import '../../../core/widgets/custom_text_field.dart';
+import '../../../core/widgets/loading_indicator.dart';
+import '../../providers/auth_provider.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _auth = FirebaseAuthDatasource();
+  final _formKey = GlobalKey<FormState>();
 
-  bool isLoading = false;
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  void register() async {
-    setState(() => isLoading = true);
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
 
-    try {
-      await _auth.register(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Register berhasil")),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
-    }
-
-    setState(() => isLoading = false);
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Register")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+    final auth = context.watch<AuthProvider>();
+
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
           children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: "Email"),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(top: 60, bottom: 30),
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+              ),
+              child: const Center(
+                child: Text(
+                  "Daftar Akun",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: "Password"),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: isLoading ? null : register,
-              child: isLoading
-                  ? const CircularProgressIndicator()
-                  : const Text("Register"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginPage()),
-                );
-              },
-              child: const Text("Sudah punya akun? Login"),
+
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      CustomTextField(
+                        controller: nameController,
+                        label: "Nama Lengkap",
+                        icon: Icons.person,
+                        validator: Validators.validateName,
+                      ),
+
+                      CustomTextField(
+                        controller: emailController,
+                        label: "Email",
+                        icon: Icons.email,
+                        validator: Validators.validateEmail,
+                      ),
+
+                      CustomTextField(
+                        controller: phoneController,
+                        label: "Nomor Telepon",
+                        icon: Icons.phone,
+                        keyboardType: TextInputType.phone,
+                        validator: Validators.validatePhone,
+                      ),
+
+                      CustomTextField(
+                        controller: passwordController,
+                        label: "Password",
+                        icon: Icons.lock,
+                        obscureText: _obscurePassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
+                        validator: Validators.validatePassword,
+                      ),
+
+                      CustomTextField(
+                        controller: confirmPasswordController,
+                        label: "Konfirmasi Password",
+                        icon: Icons.lock_outline,
+                        obscureText: _obscureConfirmPassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirmPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureConfirmPassword =
+                                  !_obscureConfirmPassword;
+                            });
+                          },
+                        ),
+                        validator: (v) => Validators.validateConfirmPassword(
+                          v,
+                          passwordController.text,
+                        ),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      auth.isLoading
+                          ? const LoadingIndicator()
+                          : CustomButton(
+                              text: "Register",
+                              onPressed: () async {
+                                if (!_formKey.currentState!.validate()) return;
+
+                                await auth.register(
+                                  emailController.text.trim(),
+                                  passwordController.text.trim(),
+                                  nameController.text.trim(),
+                                  phoneController.text.trim(),
+                                );
+
+                                if (!mounted) return;
+
+                                if (auth.errorMessage != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text(auth.errorMessage!),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    backgroundColor: Colors.green,
+                                    content: Text(
+                                      "Register berhasil, silakan login",
+                                    ),
+                                  ),
+                                );
+
+                                Navigator.pushReplacementNamed(
+                                  context,
+                                  AppRoutes.login,
+                                );
+                              },
+                            ),
+
+                      const SizedBox(height: 12),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Sudah punya akun? ",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacementNamed(
+                                context,
+                                AppRoutes.login,
+                              );
+                            },
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
