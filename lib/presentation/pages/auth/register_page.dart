@@ -36,6 +36,40 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  Future<void> _onRegister(AuthProvider auth) async {
+    if (!_formKey.currentState!.validate()) return;
+
+    await auth.register(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+      nameController.text.trim(),
+      phoneController.text.trim(),
+    );
+
+    if (!mounted) return;
+
+    // HANDLE ERROR
+    if (auth.errorMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(auth.errorMessage!),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // SUCCESS
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: Colors.green,
+        content: Text("Register berhasil, silakan login"),
+      ),
+    );
+
+    Navigator.pushReplacementNamed(context, AppRoutes.login);
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
@@ -47,8 +81,11 @@ class _RegisterPageState extends State<RegisterPage> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
+
         body: Column(
           children: [
+
+            // ========== HEADER ==========
             Container(
               width: double.infinity,
               padding: const EdgeInsets.only(top: 60, bottom: 30),
@@ -71,6 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
 
+            // ========== FORM ==========
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -78,6 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   key: _formKey,
                   child: Column(
                     children: [
+
                       CustomTextField(
                         controller: nameController,
                         label: "Nama Lengkap",
@@ -138,7 +177,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
                           },
                         ),
-                        validator: (v) => Validators.validateConfirmPassword(
+                        validator: (v) =>
+                            Validators.validateConfirmPassword(
                           v,
                           passwordController.text,
                         ),
@@ -146,51 +186,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       const SizedBox(height: 24),
 
+                      // ========== BUTTON ==========
                       auth.isLoading
                           ? const LoadingIndicator()
                           : CustomButton(
                               text: "Register",
-                              onPressed: () async {
-                                if (!_formKey.currentState!.validate()) return;
-
-                                await auth.register(
-                                  emailController.text.trim(),
-                                  passwordController.text.trim(),
-                                  nameController.text.trim(),
-                                  phoneController.text.trim(),
-                                );
-
-                                if (!mounted) return;
-
-                                if (auth.errorMessage != null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content:
-                                          Text(auth.errorMessage!),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    backgroundColor: Colors.green,
-                                    content: Text(
-                                      "Register berhasil, silakan login",
-                                    ),
-                                  ),
-                                );
-
-                                Navigator.pushReplacementNamed(
-                                  context,
-                                  AppRoutes.login,
-                                );
-                              },
+                              onPressed: () => _onRegister(auth),
                             ),
 
                       const SizedBox(height: 12),
 
+                      // ========== KE LOGIN ==========
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -215,6 +221,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ],
                       ),
+
                     ],
                   ),
                 ),
