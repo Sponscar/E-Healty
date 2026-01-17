@@ -19,6 +19,11 @@ class AuthRepository {
     return datasource.register(email, password, name, phoneNumber);
   }
 
+  Future<void> updatePhotoPath(String uid, String path) {
+    return datasource.updatePhotoPath(uid, path);
+  }
+
+
   Future logout() {
     return datasource.logout();
   }
