@@ -1,8 +1,12 @@
-import 'package:e_healty/presentation/pages/auth/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
-import 'presentation/pages/auth/login_page.dart';
+import 'core/constants/app_routes.dart';
+import 'core/constants/app_route_generator.dart';
+
+// 👉 IMPORT AUTH PROVIDER KAMU
+import 'presentation/providers/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,14 +23,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'E-Healty',
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        useMaterial3: true,
+    return MultiProvider(
+      providers: [
+        // 🔥 DAFTARKAN AUTH PROVIDER
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'E-Healty',
+
+        // 🔥 PUSAT NAVIGASI KAMU (SUDAH BENAR)
+        initialRoute: AppRoutes.login,
+        onGenerateRoute: AppRouteGenerator.generate,
+
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          useMaterial3: true,
+        ),
       ),
-      home: const LoginPage(),
     );
   }
 }
