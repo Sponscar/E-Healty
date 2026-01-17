@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../core/constants/app_routes.dart';
@@ -18,15 +19,20 @@ class UserCard extends StatelessWidget {
     final user = auth.user;
 
     Widget buildAvatar() {
-      // 🔐 Kalau ada foto lokal
-      if (user?.photoPath != null && user!.photoPath!.isNotEmpty) {
-        return CircleAvatar(
-          radius: 28,
-          backgroundImage: FileImage(File(user.photoPath!)),
-        );
+      try {
+        if (user?.photoBase64 != null &&
+            user!.photoBase64!.isNotEmpty) {
+
+          return CircleAvatar(
+            radius: 28,
+            backgroundImage:
+                MemoryImage(base64Decode(user.photoBase64!)),
+          );
+        }
+      } catch (e) {
+        print("Error load avatar: $e");
       }
 
-      // 🧩 Default avatar
       return const CircleAvatar(
         radius: 28,
         backgroundColor: Colors.blue,
