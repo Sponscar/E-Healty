@@ -1,73 +1,178 @@
-import 'package:e_healty/data/datasources/firebase_auth_datasource.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../core/constants/app_routes.dart';
+import '../../../core/utils/validators.dart';
+import '../../../core/widgets/custom_button.dart';
+import '../../../core/widgets/custom_text_field.dart';
+import '../../../core/widgets/loading_indicator.dart';
+import '../../providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _auth = FirebaseAuthDatasource();
+  final _formKey = GlobalKey<FormState>();
 
-  bool isLoading = false;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  void login() async {
-    setState(() => isLoading = true);
+  bool _obscurePassword = true;
 
-    try {
-      await _auth.login(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
-      if (!mounted) return;
+  Future<void> _handleLogin(AuthProvider auth) async {
+    if (!_formKey.currentState!.validate()) return;
 
+    await auth.login(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+    );
+
+    if (!mounted) return;
+
+    // ========== HANDLE ERROR ==========
+    if (auth.errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Login berhasil")),
+        SnackBar(
+          content: Text(auth.errorMessage!),
+          backgroundColor: Colors.red,
+        ),
       );
-
-      // ⛔ NANTI KITA GANTI KE HOMEPAGE
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      return;
     }
 
-    if (mounted) setState(() => isLoading = false);
+      // ========== SUCCESS ==========
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        backgroundColor: Colors.green,
+        content: Text("Login berhasil"),
+      ),
+    );
+
+    // ========== REDIRECT BERDASARKAN ROLE ==========
+    final role = auth.user?.role ?? 'user';
+
+    if (role == 'admin') {
+      Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthProvider>();
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Login")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: "Email"),
-              keyboardType: TextInputType.emailAddress,
+            const SizedBox(height: 60),
+
+            // ===== LOGO =====
+            Image.asset(
+              'assets/images/logo.png',
+              width: 240,
+              height: 240,
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: "Password"),
-              obscureText: true,
+
+            const SizedBox(height: 16),
+
+            // ===== TEXT WELCOME =====
+            const Text(
+              "Selamat Datang di E-Healty",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
             ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: isLoading ? null : login,
-              child: isLoading
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text("Login"),
+
+            const SizedBox(height: 32),
+
+            // ===== FORM =====
+            Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  CustomTextField(
+                    controller: emailController,
+                    label: "Email",
+                    icon: Icons.email,
+                    validator: Validators.validateEmail,
+                  ),
+
+                  CustomTextField(
+                    controller: passwordController,
+                    label: "Password",
+                    icon: Icons.lock,
+                    obscureText: _obscurePassword,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
+                    validator: Validators.validatePassword,
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // ===== BUTTON LOGIN =====
+                  auth.isLoading
+                      ? const LoadingIndicator()
+                      : CustomButton(
+                          text: "Login",
+                          onPressed: () => _handleLogin(auth),
+                        ),
+
+                  const SizedBox(height: 16),
+
+                  // ===== LINK REGISTER =====
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Belum punya akun? ",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacementNamed(
+                            context,
+                            AppRoutes.register,
+                          );
+                        },
+                        child: const Text(
+                          "Daftar",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
