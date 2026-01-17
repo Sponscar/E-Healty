@@ -8,6 +8,7 @@ class UserModel extends UserEntity {
     required super.phoneNumber,
     required super.role,
     super.photoPath,
+    super.photoBase64,
   });
 
   Map<String, dynamic> toMap() {
@@ -18,6 +19,7 @@ class UserModel extends UserEntity {
       "phoneNumber": phoneNumber,
       "role": role,
       "photoPath": photoPath,
+      "photoBase64": photoBase64,
     };
   }
 
@@ -29,6 +31,7 @@ class UserModel extends UserEntity {
       phoneNumber: map['phoneNumber'],
       role: map['role'],
       photoPath: map['photoPath'],
+      photoBase64: map['photoBase64'],
     );
   }
 }
