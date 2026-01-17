@@ -1,35 +1,34 @@
-class UserModel {
-  final String uid;
-  final String email;
-  final String name;
-  final String phoneNumber;
-  final String role;
+import 'package:e_healty/domain/entities/user.dart';
 
+class UserModel extends UserEntity {
   UserModel({
-    required this.uid,
-    required this.email,
-    required this.name,
-    required this.phoneNumber,
-    required this.role,
+    required super.uid,
+    required super.name,
+    required super.email,
+    required super.phoneNumber,
+    required super.role,
+    super.photoPath,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'uid': uid,
-      'email': email,
-      'name': name,
-      'phoneNumber': phoneNumber,
-      'role': role,
+      "uid": uid,
+      "name": name,
+      "email": email,
+      "phoneNumber": phoneNumber,
+      "role": role,
+      "photoPath": photoPath,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
       uid: map['uid'],
-      email: map['email'],
       name: map['name'],
-      phoneNumber: map['phoneNumber'] ?? '',
-      role: map['role'] ?? 'user',
+      email: map['email'],
+      phoneNumber: map['phoneNumber'],
+      role: map['role'],
+      photoPath: map['photoPath'],
     );
   }
 }
