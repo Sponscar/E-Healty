@@ -34,7 +34,6 @@ class _EditAktivitasPageState extends State<EditAktivitasPage> {
     judul = TextEditingController(text: widget.aktivitas.judul);
     desk = TextEditingController(text: widget.aktivitas.deskripsi);
 
-    // ambil gambar lama kalau ada
     base64Image = widget.aktivitas.imageBase64;
   }
 
@@ -81,7 +80,7 @@ class _EditAktivitasPageState extends State<EditAktivitasPage> {
           ),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: false, // 🔥 TANPA TOMBOL BACK
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
       ),
 
@@ -153,7 +152,6 @@ class _EditAktivitasPageState extends State<EditAktivitasPage> {
             ),
             const SizedBox(height: 12),
 
-            // ===== PREVIEW GAMBAR =====
             if (base64Image != null)
               Card(
                 child: Padding(
@@ -168,7 +166,6 @@ class _EditAktivitasPageState extends State<EditAktivitasPage> {
 
             const SizedBox(height: 16),
 
-            // ===== BUTTON SIMPAN (CUSTOM) =====
             CustomButton(
               text: "Simpan Perubahan",
               onPressed: () async {
@@ -199,7 +196,6 @@ class _EditAktivitasPageState extends State<EditAktivitasPage> {
 
             const SizedBox(height: 8),
 
-            // ===== BUTTON BATAL (MERAH + TEXT PUTIH) =====
             CustomButton(
               text: "Batal",
               backgroundColor: Colors.red,

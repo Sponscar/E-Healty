@@ -17,7 +17,6 @@ class _AddAktivitasPageState extends State<AddAktivitasPage> {
   final judul = TextEditingController();
   final desk = TextEditingController();
 
-  // 🔥 VARIABLE YANG BENAR
   String? base64Image;
 
   Future<void> _pick(ImageSource source) async {

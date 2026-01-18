@@ -22,7 +22,6 @@ class _AktivitasSehatPageState extends State<AktivitasSehatPage> {
     );
   }
 
-  // ===== DIALOG KONFIRMASI HAPUS =====
   Future<void> _confirmDelete(
     BuildContext context,
     AktivitasSehatProvider provider,
@@ -161,7 +160,6 @@ class _AktivitasSehatPageState extends State<AktivitasSehatPage> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            // ===== EDIT =====
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.blue),
                               onPressed: () {
@@ -175,7 +173,6 @@ class _AktivitasSehatPageState extends State<AktivitasSehatPage> {
                               },
                             ),
 
-                            // ===== DELETE (DIALOG) =====
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
                               onPressed: () {
