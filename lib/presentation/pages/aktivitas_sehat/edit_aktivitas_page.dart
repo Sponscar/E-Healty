@@ -1,24 +1,42 @@
 import 'dart:convert';
-import 'package:e_healty/core/utils/image_helper.dart';
 import 'package:e_healty/core/widgets/custom_text_field.dart';
+import 'package:e_healty/data/models/aktivitas_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import '../../../core/utils/image_helper.dart';
+import '../../../domain/entities/aktivitas_sehat.dart';
 import '../../providers/aktivitas_sehat_provider.dart';
+import 'package:e_healty/core/widgets/custom_button.dart';
 
-class AddAktivitasPage extends StatefulWidget {
-  const AddAktivitasPage({super.key});
+class EditAktivitasPage extends StatefulWidget {
+  final AktivitasSehat aktivitas;
+
+  const EditAktivitasPage({
+    super.key,
+    required this.aktivitas,
+  });
 
   @override
-  State<AddAktivitasPage> createState() => _AddAktivitasPageState();
+  State<EditAktivitasPage> createState() => _EditAktivitasPageState();
 }
 
-class _AddAktivitasPageState extends State<AddAktivitasPage> {
-  final judul = TextEditingController();
-  final desk = TextEditingController();
+class _EditAktivitasPageState extends State<EditAktivitasPage> {
+  late TextEditingController judul;
+  late TextEditingController desk;
 
-  // 🔥 VARIABLE YANG BENAR
   String? base64Image;
+
+  @override
+  void initState() {
+    super.initState();
+
+    judul = TextEditingController(text: widget.aktivitas.judul);
+    desk = TextEditingController(text: widget.aktivitas.deskripsi);
+
+    // ambil gambar lama kalau ada
+    base64Image = widget.aktivitas.imageBase64;
+  }
 
   Future<void> _pick(ImageSource source) async {
     try {
@@ -39,11 +57,10 @@ class _AddAktivitasPageState extends State<AddAktivitasPage> {
       setState(() {
         base64Image = base64;
       });
-
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("$e"),
+          content: Text("Gagal ambil gambar: $e"),
           backgroundColor: Colors.red,
         ),
       );
@@ -55,26 +72,23 @@ class _AddAktivitasPageState extends State<AddAktivitasPage> {
     final p = context.read<AktivitasSehatProvider>();
 
     return Scaffold(
-      // 🔥 HEADER DISAMAKAN DENGAN TIPS KESEHATAN
       appBar: AppBar(
         title: const Text(
-          "Tambah Aktivitas",
+          "Edit Aktivitas",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false, // 🔥 TANPA TOMBOL BACK
         backgroundColor: Colors.blue,
       ),
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             CustomTextField(
               controller: judul,
               label: "Judul Aktivitas",
@@ -101,6 +115,7 @@ class _AddAktivitasPageState extends State<AddAktivitasPage> {
                 return null;
               },
             ),
+
             const SizedBox(height: 12),
 
             Row(
@@ -136,47 +151,61 @@ class _AddAktivitasPageState extends State<AddAktivitasPage> {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
 
+            // ===== PREVIEW GAMBAR =====
             if (base64Image != null)
-              Center(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Image.memory(
                     base64Decode(base64Image!),
-                    height: 160,
+                    height: 150,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
 
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
 
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                ),
-                onPressed: () async {
-                  await p.add(
-                    context: context,
-                    judul: judul.text,
-                    deskripsi: desk.text,
-                    imageBase64: base64Image,
-                  );
+            // ===== BUTTON SIMPAN (CUSTOM) =====
+            CustomButton(
+              text: "Simpan Perubahan",
+              onPressed: () async {
 
-                  if (!mounted) return;
+                final updated = AktivitasModel(
+                  id: widget.aktivitas.id,
+                  uid: widget.aktivitas.uid,
+                  judul: judul.text,
+                  deskripsi: desk.text,
+                  imageBase64: base64Image,
+                  createdAt: widget.aktivitas.createdAt,
+                );
 
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  "Simpan Aktivitas",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            )
+                await p.edit(context, updated);
+
+                if (!mounted) return;
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Berhasil update aktivitas"),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+
+                Navigator.pop(context);
+              },
+            ),
+
+            const SizedBox(height: 8),
+
+            // ===== BUTTON BATAL (MERAH + TEXT PUTIH) =====
+            CustomButton(
+              text: "Batal",
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              onPressed: () => Navigator.pop(context),
+            ),
           ],
         ),
       ),
