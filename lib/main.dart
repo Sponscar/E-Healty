@@ -1,12 +1,12 @@
+import 'package:e_healty/presentation/providers/aktivitas_sehat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'core/constants/app_routes.dart';
 import 'core/constants/app_route_generator.dart';
-
-// 👉 IMPORT AUTH PROVIDER KAMU
 import 'presentation/providers/auth_provider.dart';
+import 'presentation/providers/tips_kesehatan_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,22 +25,39 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // 🔥 DAFTARKAN AUTH PROVIDER
+
         ChangeNotifierProvider(
           create: (_) => AuthProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => TipsKesehatanProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => AktivitasSehatProvider(),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'E-Healty',
 
-        // 🔥 PUSAT NAVIGASI KAMU (SUDAH BENAR)
         initialRoute: AppRoutes.login,
         onGenerateRoute: AppRouteGenerator.generate,
 
         theme: ThemeData(
           primarySwatch: Colors.blue,
           useMaterial3: true,
+
+          progressIndicatorTheme: const ProgressIndicatorThemeData(
+            color: Colors.blue,        // 🔥 semua CircularProgress otomatis biru
+          ),
+
+          inputDecorationTheme: const InputDecorationTheme(
+            border: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue, width: 2),
+            ),
+          ),
         ),
       ),
     );
