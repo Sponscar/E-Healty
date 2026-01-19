@@ -33,19 +33,16 @@ class AuthProvider extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   UserEntity? get user => _user;
 
-  // ================= LOGIN =================
   Future<void> login(String email, String password) async {
     try {
       _isLoading = true;
 
-      // 🔥 RESET ERROR DULU SEBELUM LOGIN ULANG
       _errorMessage = null;
 
       notifyListeners();
 
       _user = await _login(email, password);
 
-      // ambil data user terbaru
       await loadUser(_user!.uid);
 
     } catch (e) {
@@ -61,7 +58,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ================= REGISTER =================
   Future<void> register(
     String email,
     String password,
@@ -87,14 +83,12 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  // ================= LOGOUT =================
   Future<void> logout() async {
     await _logout();
     _user = null;
     notifyListeners();
   }
 
- // ================= UPDATE FOTO =================
 Future<void> updatePhotoBase64(String base64) async {
   try {
     _isLoading = true;
@@ -109,7 +103,6 @@ Future<void> updatePhotoBase64(String base64) async {
       base64: base64,
     );
 
-    // 🔥 WAJIB: reload user biar homepage ikut berubah
     await loadUser(_user!.uid);
 
   } catch (e) {
@@ -120,7 +113,6 @@ Future<void> updatePhotoBase64(String base64) async {
   }
 }
 
-// ================= UPDATE PROFILE =================
 Future<void> updateProfile({
   required String name,
   required String phone,
@@ -139,7 +131,6 @@ Future<void> updateProfile({
       phone: phone,
     );
 
-    // 🔥 JANGAN sentuh photoPath lagi!
     _user = _user!.copyWith(
       name: name,
       phoneNumber: phone,
@@ -157,7 +148,6 @@ Future<void> updateProfile({
 }
 
 
-  // ================= LOAD USER DARI FIRESTORE =================
    Future<void> loadUser(String uid) async {
     final doc = await FirebaseFirestore.instance
         .collection('users')

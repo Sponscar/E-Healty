@@ -31,7 +31,6 @@ class AppRouteGenerator {
       case AppRoutes.profile:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
 
-      // ===== TIPS KESEHATAN =====
       case AppRoutes.tipsKesehatan:
         return MaterialPageRoute(
           builder: (_) => const TipsKesehatanListPage(),

@@ -54,7 +54,6 @@ class _AddAktivitasPageState extends State<AddAktivitasPage> {
     final p = context.read<AktivitasSehatProvider>();
 
     return Scaffold(
-      // 🔥 HEADER DISAMAKAN DENGAN TIPS KESEHATAN
       appBar: AppBar(
         title: const Text(
           "Tambah Aktivitas",

@@ -78,7 +78,6 @@ class _TipsKesehatanListPageState
     );
   }
 
-  // ========== HANDLE GAMBAR AMAN ==========
   Widget _buildImage(String url) {
     if (url.isEmpty) {
       return const Icon(Icons.health_and_safety, size: 50);

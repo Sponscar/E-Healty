@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
 
           progressIndicatorTheme: const ProgressIndicatorThemeData(
-            color: Colors.blue,        // 🔥 semua CircularProgress otomatis biru
+            color: Colors.blue,        
           ),
 
           inputDecorationTheme: const InputDecorationTheme(

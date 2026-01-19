@@ -21,7 +21,7 @@ class FirebaseAuthDatasource {
     String name,
     String phoneNumber,
   ) async {
-    // 1️⃣ BUAT AKUN AUTH
+    
     final result = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,

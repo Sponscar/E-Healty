@@ -42,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
 
     if (!mounted) return;
 
-    // ========== HANDLE ERROR ==========
     if (auth.errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -53,7 +52,6 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-      // ========== SUCCESS ==========
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Colors.green,
@@ -61,7 +59,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    // ========== REDIRECT BERDASARKAN ROLE ==========
     final role = auth.user?.role ?? 'user';
 
     if (role == 'admin') {
@@ -83,7 +80,6 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             const SizedBox(height: 60),
 
-            // ===== LOGO =====
             Image.asset(
               'assets/images/logo.png',
               width: 260,
@@ -92,7 +88,6 @@ class _LoginPageState extends State<LoginPage> {
 
             const SizedBox(height: 16),
 
-            // ===== TEXT WELCOME =====
             const Text(
               "Selamat Datang di E-Healthy",
               textAlign: TextAlign.center,
@@ -105,7 +100,6 @@ class _LoginPageState extends State<LoginPage> {
 
             const SizedBox(height: 32),
 
-            // ===== FORM =====
             Form(
               key: _formKey,
               child: Column(
@@ -139,7 +133,6 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 24),
 
-                  // ===== BUTTON LOGIN =====
                   auth.isLoading
                       ? const LoadingIndicator()
                       : CustomButton(
@@ -149,7 +142,6 @@ class _LoginPageState extends State<LoginPage> {
 
                   const SizedBox(height: 16),
 
-                  // ===== LINK REGISTER =====
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

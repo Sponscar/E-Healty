@@ -36,7 +36,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
-  // ============ PICK FOTO (FINAL & AMAN) ============
   Future<void> _pickImage(AuthProvider auth) async {
     try {
       final picker = ImagePicker();
@@ -47,7 +46,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (image == null) return;
 
-      // 🔥 KOMPRES + BASE64 (AMAN FOTO BESAR)
       final base64String =
           await ImageHelper.compressToBase64(image.path);
 
@@ -75,7 +73,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // ============ VALIDASI ============
   bool _validate() {
     if (nameController.text.isEmpty ||
         phoneController.text.isEmpty) {
@@ -113,7 +110,6 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // ===== AVATAR =====
             ProfileAvatar(
               photoPath: user?.photoPath,
               photoBase64: user?.photoBase64,
@@ -158,7 +154,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 24),
 
-            // ===== SIMPAN =====
             auth.isLoading
                 ? const CircularProgressIndicator()
                 : CustomButton(
@@ -185,7 +180,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 12),
 
-            // ===== KEMBALI =====
             CustomButton(
               text: "Kembali ke Home",
               onPressed: () {

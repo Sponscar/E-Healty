@@ -39,7 +39,6 @@ class AdminDashboardPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // ===== INFO ADMIN =====
             Card(
               child: ListTile(
                 leading: const Icon(Icons.admin_panel_settings,
@@ -64,7 +63,6 @@ class AdminDashboardPage extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            // ===== MENU 1 : KELOLA TIPS =====
             _buildMenuCard(
               context,
               title: "Kelola Tips Kesehatan",
@@ -77,7 +75,6 @@ class AdminDashboardPage extends StatelessWidget {
               },
             ),
 
-            // ===== MENU 2 : KELOLA AKTIVITAS =====
             _buildMenuCard(
               context,
               title: "Kelola Aktivitas Sehat",
@@ -90,7 +87,6 @@ class AdminDashboardPage extends StatelessWidget {
               },
             ),
 
-            // ===== MENU 3 : DATA USER (opsional) =====
             _buildMenuCard(
               context,
               title: "Data Pengguna",

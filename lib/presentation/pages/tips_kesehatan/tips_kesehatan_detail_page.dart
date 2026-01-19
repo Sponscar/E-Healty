@@ -51,12 +51,10 @@ class TipsKesehatanDetailPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                // ===== GAMBAR =====
                 _buildImage(tips.imageUrl),
 
                 const SizedBox(height: 16),
 
-                // ===== JUDUL =====
                 Text(
                   tips.title,
                   style: const TextStyle(
@@ -77,7 +75,6 @@ class TipsKesehatanDetailPage extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // ===== ISI =====
                 Text(
                   tips.content,
                   textAlign: TextAlign.justify,
@@ -90,7 +87,6 @@ class TipsKesehatanDetailPage extends StatelessWidget {
     );
   }
 
-  // ========== WIDGET GAMBAR ==========
   Widget _buildImage(String url) {
     if (url.isEmpty) {
       return const Icon(Icons.health_and_safety, size: 120);

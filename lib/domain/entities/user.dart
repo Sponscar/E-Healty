@@ -17,7 +17,6 @@ class UserEntity {
     this.photoBase64,
   });
 
-  // helper copyWith (biar gampang update sebagian data)
   UserEntity copyWith({
     String? name,
     String? phoneNumber,

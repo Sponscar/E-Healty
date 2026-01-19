@@ -4,7 +4,6 @@ import '../models/tips_kesehatan_model.dart';
 class FirestoreDatasource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // ================= GET ALL TIPS =================
   Future<List<TipsKesehatanModel>> getTipsKesehatan() async {
     try {
       final result = await _firestore
@@ -24,7 +23,6 @@ class FirestoreDatasource {
     }
   }
 
-  // ================= GET DETAIL =================
   Future<TipsKesehatanModel> getTipsDetail(String id) async {
     try {
       final doc = await _firestore
@@ -46,7 +44,6 @@ class FirestoreDatasource {
     }
   }
 
-  // ================= ADMIN: CREATE =================
   Future<void> createTips(Map<String, dynamic> data) async {
     try {
       await _firestore.collection('tips_kesehatan').add({
@@ -58,7 +55,6 @@ class FirestoreDatasource {
     }
   }
 
-  // ================= ADMIN: UPDATE =================
   Future<void> updateTips(
     String id,
     Map<String, dynamic> data,
@@ -73,7 +69,6 @@ class FirestoreDatasource {
     }
   }
 
-  // ================= ADMIN: DELETE =================
   Future<void> deleteTips(String id) async {
     try {
       await _firestore

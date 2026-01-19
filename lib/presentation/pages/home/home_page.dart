@@ -28,7 +28,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  // ===== DIALOG KONFIRMASI KELUAR (STYLE KAPSUL) =====
   Future<bool> _confirmExitOrLogout(
     BuildContext context,
     AuthProvider auth,
@@ -116,7 +115,6 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ===== USER CARD =====
               UserCard(
                 auth: auth,
                 onLogout: () =>
@@ -135,7 +133,6 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 12),
 
-              // ===== TIPS KESEHATAN =====
               TipsKesehatanCard(
                 onTap: () {
                   Navigator.pushNamed(
@@ -147,7 +144,6 @@ class _HomePageState extends State<HomePage> {
 
               const SizedBox(height: 12),
 
-              // ===== AKTIVITAS SEHAT =====
               AktivitasCard(
                 onTap: () {
                   Navigator.pushNamed(

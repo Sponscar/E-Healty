@@ -31,7 +31,7 @@ class CustomTextField extends StatelessWidget {
         validator: validator,
 
         style: const TextStyle(
-          color: Colors.black,           // 🔥 teks yang diketik warna abu
+          color: Colors.black,           
         ),
 
         decoration: InputDecoration(
@@ -40,16 +40,13 @@ class CustomTextField extends StatelessWidget {
           prefixIcon: Icon(icon, color: Colors.blue),
           suffixIcon: suffixIcon,
 
-          // 🔥 BACKGROUND LIGHT BLUE
           filled: true,
           fillColor: Colors.blue.shade50,
 
-          // ===== OUTLINE DEFAULT =====
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
           ),
 
-          // ===== SAAT FOKUS (BIRU) =====
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(
@@ -58,7 +55,6 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
 
-          // ===== SAAT ENABLED =====
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(
@@ -67,7 +63,6 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
 
-          // ===== SAAT ERROR =====
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(
@@ -84,10 +79,8 @@ class CustomTextField extends StatelessWidget {
             ),
           ),
 
-          // 🔥 warna label abu
           labelStyle: const TextStyle(color: Colors.blue),
 
-          // 🔥 warna hint abu
           hintStyle: const TextStyle(color: Colors.blue),
         ),
       ),

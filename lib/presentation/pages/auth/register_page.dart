@@ -48,7 +48,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (!mounted) return;
 
-    // HANDLE ERROR
     if (auth.errorMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -59,7 +58,6 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    // SUCCESS
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         backgroundColor: Colors.green,
@@ -85,7 +83,6 @@ class _RegisterPageState extends State<RegisterPage> {
         body: Column(
           children: [
 
-            // ========== HEADER ==========
             Container(
               width: double.infinity,
               padding: const EdgeInsets.only(top: 60, bottom: 30),
@@ -108,7 +105,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
 
-            // ========== FORM ==========
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -186,7 +182,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       const SizedBox(height: 24),
 
-                      // ========== BUTTON ==========
                       auth.isLoading
                           ? const LoadingIndicator()
                           : CustomButton(
@@ -196,7 +191,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
                       const SizedBox(height: 12),
 
-                      // ========== KE LOGIN ==========
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

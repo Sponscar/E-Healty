@@ -69,7 +69,6 @@ class UserCard extends StatelessWidget {
           child: Row(
             children: [
 
-              // ✅ AVATAR DINAMIS
               buildAvatar(),
 
               const SizedBox(width: 12),
