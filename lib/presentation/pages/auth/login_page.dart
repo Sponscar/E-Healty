@@ -30,6 +30,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _handleLogin(AuthProvider auth) async {
+
+    auth.clearError();
+
     if (!_formKey.currentState!.validate()) return;
 
     await auth.login(
@@ -83,15 +86,15 @@ class _LoginPageState extends State<LoginPage> {
             // ===== LOGO =====
             Image.asset(
               'assets/images/logo.png',
-              width: 240,
-              height: 240,
+              width: 260,
+              height: 260,
             ),
 
             const SizedBox(height: 16),
 
             // ===== TEXT WELCOME =====
             const Text(
-              "Selamat Datang di E-Healty",
+              "Selamat Datang di E-Healthy",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,

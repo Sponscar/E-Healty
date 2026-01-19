@@ -3,33 +3,47 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final Color backgroundColor;
+  final Color textColor;
+  final bool fullWidth;
 
   const CustomButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
-  }) : super(key: key);
+    this.backgroundColor = Colors.blue,
+    this.textColor = Colors.white,
+    this.fullWidth = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      height: 50,
+      width: fullWidth ? double.infinity : null,
       child: ElevatedButton(
-        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,       // 🔵 background biru
-          foregroundColor: Colors.white,      // ⚪ teks putih
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+          backgroundColor: backgroundColor,
+          foregroundColor: textColor,
+
+          // 🔥 padding biar keliatan kapsul
+          padding: const EdgeInsets.symmetric(
+            vertical: 14,
+            horizontal: 24,
           ),
+
+          // 🔥 INI KUNCINYA (kapsul)
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+
+          elevation: 2,
         ),
+        onPressed: onPressed,
         child: Text(
           text,
           style: const TextStyle(
-            fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Colors.white,              // pastikan teks putih
+            fontSize: 14,
           ),
         ),
       ),

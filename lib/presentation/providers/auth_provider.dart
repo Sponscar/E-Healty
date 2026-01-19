@@ -37,11 +37,15 @@ class AuthProvider extends ChangeNotifier {
   Future<void> login(String email, String password) async {
     try {
       _isLoading = true;
+
+      // 🔥 RESET ERROR DULU SEBELUM LOGIN ULANG
+      _errorMessage = null;
+
       notifyListeners();
 
       _user = await _login(email, password);
 
-      // 🔥 WAJIB: ambil ulang data terbaru termasuk photoPath
+      // ambil data user terbaru
       await loadUser(_user!.uid);
 
     } catch (e) {
@@ -50,6 +54,11 @@ class AuthProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  void clearError() {
+    _errorMessage = null;
+    notifyListeners();
   }
 
   // ================= REGISTER =================

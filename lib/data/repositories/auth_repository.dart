@@ -23,6 +23,9 @@ class AuthRepository {
     return datasource.updatePhotoPath(uid, path);
   }
 
+  Future<void> updatePhotoBase64(String uid, String base64) {
+    return datasource.updatePhotoBase64(uid: uid, base64: base64);
+  }
 
   Future logout() {
     return datasource.logout();

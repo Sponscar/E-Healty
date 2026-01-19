@@ -13,7 +13,6 @@ class FirestoreServiceDatasource {
   Future<void> create(AktivitasModel model) async {
     final data = model.toMap();
 
-    // 🔥 Biar aman dari null aneh
     data.removeWhere((key, value) => value == null);
 
     await aktivitasRef(model.uid)

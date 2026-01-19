@@ -1,10 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
+import 'package:e_healty/core/utils/image_helper.dart';
+import 'package:e_healty/core/widgets/custom_text_field.dart';
 import 'package:e_healty/presentation/widgets/avatar_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_routes.dart';
 import '../../../core/widgets/custom_button.dart';
@@ -26,7 +25,6 @@ class _ProfilePageState extends State<ProfilePage> {
     super.didChangeDependencies();
 
     final user = context.read<AuthProvider>().user;
-
     nameController.text = user?.name ?? '';
     phoneController.text = user?.phoneNumber ?? '';
   }
@@ -38,21 +36,24 @@ class _ProfilePageState extends State<ProfilePage> {
     super.dispose();
   }
 
-  // ============ PICK FOTO ============
+  // ============ PICK FOTO (FINAL & AMAN) ============
   Future<void> _pickImage(AuthProvider auth) async {
     try {
       final picker = ImagePicker();
 
       final image = await picker.pickImage(
         source: ImageSource.gallery,
-        imageQuality: 70,
       );
 
       if (image == null) return;
 
-      // 🔥 KONVERSI KE BASE64
-      final bytes = await File(image.path).readAsBytes();
-      final base64String = base64Encode(bytes);
+      // 🔥 KOMPRES + BASE64 (AMAN FOTO BESAR)
+      final base64String =
+          await ImageHelper.compressToBase64(image.path);
+
+      if (base64String == null) {
+        throw Exception("Gagal memproses gambar");
+      }
 
       await auth.updatePhotoBase64(base64String);
 
@@ -67,14 +68,14 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Gagal update foto: $e"),
+          content: Text(e.toString()),
           backgroundColor: Colors.red,
         ),
       );
     }
   }
 
-  // ============ VALIDASI SIMPLE ============
+  // ============ VALIDASI ============
   bool _validate() {
     if (nameController.text.isEmpty ||
         phoneController.text.isEmpty) {
@@ -86,7 +87,6 @@ class _ProfilePageState extends State<ProfilePage> {
       );
       return false;
     }
-
     return true;
   }
 
@@ -105,20 +105,20 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: false,   // ← MENGHILANGKAN TOMBOL BACK
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
       ),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             // ===== AVATAR =====
-           ProfileAvatar(
+            ProfileAvatar(
               photoPath: user?.photoPath,
               photoBase64: user?.photoBase64,
               onTap: () => _pickImage(auth),
             ),
-
 
             const SizedBox(height: 20),
 
@@ -129,30 +129,36 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 24),
 
-            TextField(
+            CustomTextField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: "Nama",
-                prefixIcon: Icon(Icons.person),
-                border: OutlineInputBorder(),
-              ),
+              label: "Nama",
+              icon: Icons.person,
+              validator: (v) {
+                if (v == null || v.isEmpty) {
+                  return "Nama tidak boleh kosong";
+                }
+                return null;
+              },
             ),
 
             const SizedBox(height: 12),
 
-            TextField(
+            CustomTextField(
               controller: phoneController,
+              label: "No HP",
+              icon: Icons.phone,
               keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
-                labelText: "No HP",
-                prefixIcon: Icon(Icons.phone),
-                border: OutlineInputBorder(),
-              ),
+              validator: (v) {
+                if (v == null || v.isEmpty) {
+                  return "No HP tidak boleh kosong";
+                }
+                return null;
+              },
             ),
 
             const SizedBox(height: 24),
 
-            // ===== BUTTON SIMPAN =====
+            // ===== SIMPAN =====
             auth.isLoading
                 ? const CircularProgressIndicator()
                 : CustomButton(
@@ -169,7 +175,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text("Profil berhasil diperbarui"),
+                          content:
+                              Text("Profil berhasil diperbarui"),
                           backgroundColor: Colors.green,
                         ),
                       );
