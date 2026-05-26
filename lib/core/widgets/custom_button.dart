@@ -25,13 +25,11 @@ class CustomButton extends StatelessWidget {
           backgroundColor: backgroundColor,
           foregroundColor: textColor,
 
-          // 🔥 padding biar keliatan kapsul
           padding: const EdgeInsets.symmetric(
             vertical: 14,
             horizontal: 24,
           ),
 
-          // 🔥 INI KUNCINYA (kapsul)
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(50),
           ),

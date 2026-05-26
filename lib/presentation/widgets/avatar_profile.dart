@@ -18,7 +18,6 @@ class ProfileAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     ImageProvider? imageProvider;
 
-    // PRIORITAS 1: base64 dari firestore
     if (photoBase64 != null && photoBase64!.isNotEmpty) {
       try {
         imageProvider = MemoryImage(base64Decode(photoBase64!));
@@ -27,7 +26,6 @@ class ProfileAvatar extends StatelessWidget {
       }
     }
 
-    // PRIORITAS 2: file lokal
     else if (photoPath != null && photoPath!.isNotEmpty) {
       imageProvider = FileImage(File(photoPath!));
     }

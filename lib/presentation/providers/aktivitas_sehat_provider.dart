@@ -27,6 +27,19 @@ class AktivitasSehatProvider extends ChangeNotifier {
     _delete = DeleteAktivitas(repo);
   }
 
+   // khusus untuk testing
+  AktivitasSehatProvider.forTest({
+    required CreateAktivitas create,
+    required GetAktivitas get,
+    required UpdateAktivitas update,
+    required DeleteAktivitas delete,
+  }) {
+    _create = create;
+    _get = get;
+    _update = update;
+    _delete = delete;
+  }
+
   List<AktivitasModel> list = [];
   bool loading = false;
 
@@ -49,6 +62,15 @@ class AktivitasSehatProvider extends ChangeNotifier {
     required String deskripsi,
     String? imageBase64,
   }) async {
+
+    // ← MODIFIKASI: validasi input
+  if (judul.trim().isEmpty) {
+    throw ArgumentError('Judul tidak boleh kosong');
+  }
+  if (deskripsi.trim().isEmpty) {
+    throw ArgumentError('Deskripsi tidak boleh kosong');
+  }
+
     final model = AktivitasModel(
       id: const Uuid().v4(),
       uid: _uid(context),

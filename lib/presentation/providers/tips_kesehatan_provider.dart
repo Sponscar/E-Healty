@@ -17,6 +17,15 @@ class TipsKesehatanProvider extends ChangeNotifier {
     _getDetail = GetTipsKesehatanDetail(repo);
   }
 
+   // ← TAMBAHKAN INI — khusus testing
+  TipsKesehatanProvider.forTest({
+    required GetTipsKesehatan getAll,
+    required GetTipsKesehatanDetail getDetail,
+  }) {
+    _getAll = getAll;
+    _getDetail = getDetail;
+  }
+
   List<TipsKesehatanEntity> _list = [];
   bool _loading = false;
 
