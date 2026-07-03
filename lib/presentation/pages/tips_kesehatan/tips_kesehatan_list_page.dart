@@ -35,6 +35,37 @@ class _TipsKesehatanListPageState
       body: provider.loading
           ? const Center(child: CircularProgressIndicator())
 
+          : provider.errorMessage != null
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        size: 64,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          provider.errorMessage!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.refresh),
+                        label: const Text("Coba Lagi"),
+                        onPressed: () {
+                          context.read<TipsKesehatanProvider>().loadTips();
+                        },
+                      ),
+                    ],
+                  ),
+                )
+
           : provider.list.isEmpty
               ? const Center(
                   child: Text("Belum ada data tips kesehatan"),

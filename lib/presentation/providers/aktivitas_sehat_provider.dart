@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import '../../core/utils/network_helper.dart';
 import '../../data/datasources/firestore_service_datasource.dart';
 import '../../data/models/aktivitas_model.dart';
 import '../../data/repositories/aktivitas_repository.dart';
@@ -42,18 +42,26 @@ class AktivitasSehatProvider extends ChangeNotifier {
 
   List<AktivitasModel> list = [];
   bool loading = false;
+  String? errorMessage;
 
   String _uid(BuildContext c) =>
       c.read<AuthProvider>().user!.uid;
 
   Future<void> load(BuildContext c) async {
-    loading = true;
-    notifyListeners();
+    try {
+      loading = true;
+      errorMessage = null;
+      notifyListeners();
 
-    list = await _get(_uid(c));
+      list = await _get(_uid(c));
 
-    loading = false;
-    notifyListeners();
+    } catch (e) {
+      errorMessage = NetworkHelper.getErrorMessage(e);
+      debugPrint(e.toString());
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> add({

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/utils/network_helper.dart';
 import '../../data/datasources/firestore_datasource.dart';
 import '../../data/repositories/tips_kesehatan_repository.dart';
 import '../../domain/entities/tips_kesehatan.dart';
@@ -28,18 +29,22 @@ class TipsKesehatanProvider extends ChangeNotifier {
 
   List<TipsKesehatanEntity> _list = [];
   bool _loading = false;
+  String? _errorMessage;
 
   List<TipsKesehatanEntity> get list => _list;
   bool get loading => _loading;
+  String? get errorMessage => _errorMessage;
 
   Future<void> loadTips() async {
     try {
       _loading = true;
+      _errorMessage = null;
       notifyListeners();
 
       _list = await _getAll();
 
     } catch (e) {
+      _errorMessage = NetworkHelper.getErrorMessage(e);
       debugPrint(e.toString());
     }
 

@@ -101,12 +101,14 @@ class AuthProvider extends ChangeNotifier {
   ) async {
     try {
       _isLoading = true;
+      _errorMessage = null;
       notifyListeners();
 
       _user = await _register(email, password, name, phone);
 
     } catch (e) {
-      _errorMessage = e.toString().replaceAll("Exception:", "");
+      _errorMessage = "Email sudah terdaftar atau terjadi kesalahan";
+      _user = null;
     } finally {
       _isLoading = false;
       notifyListeners();

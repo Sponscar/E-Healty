@@ -63,8 +63,8 @@ class _AddAktivitasPageState extends State<AddAktivitasPage> {
           ),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
 
       body: SingleChildScrollView(

@@ -106,6 +106,42 @@ class _AktivitasSehatPageState extends State<AktivitasSehatPage> {
           ? const Center(
               child: CircularProgressIndicator(color: Colors.blue),
             )
+          : p.errorMessage != null
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        size: 64,
+                        color: Colors.red,
+                      ),
+                      const SizedBox(height: 16),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Text(
+                          p.errorMessage!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.refresh, color: Colors.white),
+                        label: const Text(
+                          "Coba Lagi",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                        ),
+                        onPressed: () {
+                          context.read<AktivitasSehatProvider>().load(context);
+                        },
+                      ),
+                    ],
+                  ),
+                )
           : p.list.isEmpty
               ? const Center(child: Text("Belum ada aktivitas"))
               : ListView.builder(

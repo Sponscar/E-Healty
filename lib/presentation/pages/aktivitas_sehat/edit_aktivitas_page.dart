@@ -80,8 +80,8 @@ class _EditAktivitasPageState extends State<EditAktivitasPage> {
           ),
         ),
         centerTitle: true,
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
 
       body: SingleChildScrollView(

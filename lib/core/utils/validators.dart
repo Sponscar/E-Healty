@@ -4,7 +4,12 @@ class Validators {
       return "Email wajib diisi";
     }
 
-    if (!value.contains("@")) {
+    // Pattern yang lebih akurat untuk validasi email
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+
+    if (!emailRegex.hasMatch(value)) {
       return "Format email tidak valid";
     }
 
