@@ -1,5 +1,4 @@
 import 'package:mockito/annotations.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:e_healty/domain/usecase/aktivitas_sehat/create_aktivitas.dart';
 import 'package:e_healty/domain/usecase/aktivitas_sehat/get_aktivitas.dart';
 import 'package:e_healty/domain/usecase/aktivitas_sehat/update_aktivitas.dart';

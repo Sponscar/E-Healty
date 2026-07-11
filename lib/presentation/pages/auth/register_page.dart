@@ -8,7 +8,7 @@ import '../../../core/widgets/loading_indicator.dart';
 import '../../providers/auth_provider.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -82,7 +82,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
         body: Column(
           children: [
-
             Container(
               width: double.infinity,
               padding: const EdgeInsets.only(top: 60, bottom: 30),
@@ -112,7 +111,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   key: _formKey,
                   child: Column(
                     children: [
-
                       CustomTextField(
                         controller: nameController,
                         label: "Nama Lengkap",
@@ -173,8 +171,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             });
                           },
                         ),
-                        validator: (v) =>
-                            Validators.validateConfirmPassword(
+                        validator: (v) => Validators.validateConfirmPassword(
                           v,
                           passwordController.text,
                         ),
@@ -215,7 +212,6 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ],
                       ),
-
                     ],
                   ),
                 ),

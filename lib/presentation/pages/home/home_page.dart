@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_routes.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/custom_app_bar.dart';
 import '../../widgets/user_card.dart';
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () => _confirmExitOrLogout(context, auth),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF7F7F7),
+        backgroundColor: AppColors.offWhite,
 
         appBar: const CustomAppBar(title: "E-Healthy"),
 
@@ -125,10 +127,7 @@ class _HomePageState extends State<HomePage> {
 
               const Text(
                 "Menu Utama",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: AppTextStyles.heading2,
               ),
 
               const SizedBox(height: 12),

@@ -4,7 +4,7 @@ import '../../../core/constants/app_routes.dart';
 import '../../providers/auth_provider.dart';
 
 class AdminDashboardPage extends StatelessWidget {
-  const AdminDashboardPage({Key? key}) : super(key: key);
+  const AdminDashboardPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +24,9 @@ class AdminDashboardPage extends StatelessWidget {
 
               if (!context.mounted) return;
 
-              Navigator.pushReplacementNamed(
-                context,
-                AppRoutes.login,
-              );
+              Navigator.pushReplacementNamed(context, AppRoutes.login);
             },
-          )
+          ),
         ],
       ),
 
@@ -38,11 +35,12 @@ class AdminDashboardPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Card(
               child: ListTile(
-                leading: const Icon(Icons.admin_panel_settings,
-                    color: Colors.blue),
+                leading: const Icon(
+                  Icons.admin_panel_settings,
+                  color: Colors.blue,
+                ),
                 title: Text(
                   "Halo, ${user?.name ?? 'Admin'}",
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -55,10 +53,7 @@ class AdminDashboardPage extends StatelessWidget {
 
             const Text(
               "Menu Admin",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 12),
@@ -68,10 +63,7 @@ class AdminDashboardPage extends StatelessWidget {
               title: "Kelola Tips Kesehatan",
               icon: Icons.health_and_safety,
               onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.manageTips,
-                );
+                Navigator.pushNamed(context, AppRoutes.manageTips);
               },
             ),
 
@@ -80,10 +72,7 @@ class AdminDashboardPage extends StatelessWidget {
               title: "Kelola Aktivitas Sehat",
               icon: Icons.directions_run,
               onTap: () {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.aktivitasSehat,
-                );
+                Navigator.pushNamed(context, AppRoutes.aktivitasSehat);
               },
             ),
 
@@ -93,9 +82,7 @@ class AdminDashboardPage extends StatelessWidget {
               icon: Icons.people,
               onTap: () {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Fitur belum dibuat"),
-                  ),
+                  const SnackBar(content: Text("Fitur belum dibuat")),
                 );
               },
             ),

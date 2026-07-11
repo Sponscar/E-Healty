@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../core/constants/app_routes.dart';
 import '../providers/auth_provider.dart';
@@ -8,11 +7,7 @@ class UserCard extends StatelessWidget {
   final AuthProvider auth;
   final VoidCallback onLogout;
 
-  const UserCard({
-    super.key,
-    required this.auth,
-    required this.onLogout,
-  });
+  const UserCard({super.key, required this.auth, required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +15,10 @@ class UserCard extends StatelessWidget {
 
     Widget buildAvatar() {
       try {
-        if (user?.photoBase64 != null &&
-            user!.photoBase64!.isNotEmpty) {
-
+        if (user?.photoBase64 != null && user!.photoBase64!.isNotEmpty) {
           return CircleAvatar(
             radius: 28,
-            backgroundImage:
-                MemoryImage(base64Decode(user.photoBase64!)),
+            backgroundImage: MemoryImage(base64Decode(user.photoBase64!)),
           );
         }
       } catch (e) {
@@ -60,15 +52,12 @@ class UserCard extends StatelessWidget {
       },
 
       child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
 
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-
               buildAvatar(),
 
               const SizedBox(width: 12),
@@ -79,9 +68,7 @@ class UserCard extends StatelessWidget {
                   children: [
                     Text(
                       "Selamat Datang, ${user?.name ?? '-'}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     Text(user?.email ?? '-'),
                   ],
@@ -101,19 +88,14 @@ class _UserActionSheet extends StatelessWidget {
   final VoidCallback onProfile;
   final VoidCallback onLogout;
 
-  const _UserActionSheet({
-    required this.onProfile,
-    required this.onLogout,
-  });
+  const _UserActionSheet({required this.onProfile, required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const ListTile(
-          title: Text("Menu Akun"),
-        ),
+        const ListTile(title: Text("Menu Akun")),
 
         ListTile(
           leading: const Icon(Icons.person),

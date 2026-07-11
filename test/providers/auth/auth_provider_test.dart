@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'package:e_healty/domain/entities/user.dart';
 import 'package:e_healty/presentation/providers/auth_provider.dart';
 import './mocks.mocks.dart';
 
@@ -15,22 +14,24 @@ void main() {
   late AuthProvider provider;
 
   setUp(() {
-    mockLogin       = MockLoginUseCase();
-    mockRegister    = MockRegisterUseCase();
-    mockLogout      = MockLogoutUseCase();
+    mockLogin = MockLoginUseCase();
+    mockRegister = MockRegisterUseCase();
+    mockLogout = MockLogoutUseCase();
     mockUpdatePhoto = MockUpdatePhotoUseCase();
-    mockDatasource  = MockFirebaseAuthDatasource();
-    mockUser        = MockUserEntity();
+    mockDatasource = MockFirebaseAuthDatasource();
+    mockUser = MockUserEntity();
 
     when(mockUser.uid).thenReturn('uid-123');
     when(mockUser.name).thenReturn('Panji');
     when(mockUser.photoBase64).thenReturn(null); // ← fix error
-    when(mockUser.copyWith(
-      name: anyNamed('name'),
-      phoneNumber: anyNamed('phoneNumber'),
-      photoBase64: anyNamed('photoBase64'),
-      photoPath: anyNamed('photoPath'),
-    )).thenReturn(mockUser);
+    when(
+      mockUser.copyWith(
+        name: anyNamed('name'),
+        phoneNumber: anyNamed('phoneNumber'),
+        photoBase64: anyNamed('photoBase64'),
+        photoPath: anyNamed('photoPath'),
+      ),
+    ).thenReturn(mockUser);
 
     provider = AuthProvider.forTest(
       login: mockLogin,
@@ -46,10 +47,10 @@ void main() {
   // GROUP: login()
   // ════════════════════════════════════════════
   group('login()', () {
-
     test('isLoading menjadi true lalu false saat login()', () async {
-      when(mockLogin('test@email.com', '123456'))
-          .thenAnswer((_) async => mockUser);
+      when(
+        mockLogin('test@email.com', '123456'),
+      ).thenAnswer((_) async => mockUser);
 
       final states = <bool>[];
       provider.addListener(() => states.add(provider.isLoading));
@@ -61,8 +62,9 @@ void main() {
     });
 
     test('user terisi dan errorMessage null setelah login berhasil', () async {
-      when(mockLogin('test@email.com', '123456'))
-          .thenAnswer((_) async => mockUser);
+      when(
+        mockLogin('test@email.com', '123456'),
+      ).thenAnswer((_) async => mockUser);
 
       await provider.login('test@email.com', '123456');
 
@@ -100,7 +102,6 @@ void main() {
   // GROUP: clearError()
   // ════════════════════════════════════════════
   group('clearError()', () {
-
     test('clearError() mengosongkan errorMessage', () async {
       when(mockLogin(any, any)).thenThrow(Exception('Error'));
       await provider.login('x@x.com', 'x');
@@ -117,10 +118,10 @@ void main() {
   // GROUP: register()
   // ════════════════════════════════════════════
   group('register()', () {
-
     test('user terisi setelah register berhasil', () async {
-      when(mockRegister('new@email.com', 'pass123', 'Panji', '08123'))
-          .thenAnswer((_) async => mockUser);
+      when(
+        mockRegister('new@email.com', 'pass123', 'Panji', '08123'),
+      ).thenAnswer((_) async => mockUser);
 
       await provider.register('new@email.com', 'pass123', 'Panji', '08123');
 
@@ -130,8 +131,9 @@ void main() {
     });
 
     test('errorMessage terisi jika register throw exception', () async {
-      when(mockRegister(any, any, any, any))
-          .thenThrow(Exception('Email sudah digunakan'));
+      when(
+        mockRegister(any, any, any, any),
+      ).thenThrow(Exception('Email sudah digunakan'));
 
       await provider.register('ada@email.com', 'pass', 'nama', '08123');
 
@@ -141,8 +143,7 @@ void main() {
     });
 
     test('isLoading menjadi true lalu false saat register()', () async {
-      when(mockRegister(any, any, any, any))
-          .thenAnswer((_) async => mockUser);
+      when(mockRegister(any, any, any, any)).thenAnswer((_) async => mockUser);
 
       final states = <bool>[];
       provider.addListener(() => states.add(provider.isLoading));
@@ -157,7 +158,6 @@ void main() {
   // GROUP: logout()
   // ════════════════════════════════════════════
   group('logout()', () {
-
     test('user menjadi null setelah logout()', () async {
       when(mockLogin(any, any)).thenAnswer((_) async => mockUser);
       await provider.login('test@email.com', '123456');
@@ -182,69 +182,77 @@ void main() {
   // GROUP: updatePhotoBase64()
   // ════════════════════════════════════════════
   group('updatePhotoBase64()', () {
+    test(
+      'errorMessage terisi jika user null saat updatePhotoBase64()',
+      () async {
+        final providerNoUser = AuthProvider.forTest(
+          login: mockLogin,
+          register: mockRegister,
+          logout: mockLogout,
+          updatePhoto: mockUpdatePhoto,
+          datasource: mockDatasource,
+          loadUserFn: (uid) async => null,
+        );
 
-    test('errorMessage terisi jika user null saat updatePhotoBase64()',
-        () async {
-      final providerNoUser = AuthProvider.forTest(
-        login: mockLogin,
-        register: mockRegister,
-        logout: mockLogout,
-        updatePhoto: mockUpdatePhoto,
-        datasource: mockDatasource,
-        loadUserFn: (uid) async => null,
-      );
+        await providerNoUser.updatePhotoBase64('base64string');
 
-      await providerNoUser.updatePhotoBase64('base64string');
-
-      // White box: if (_user == null) throw Exception
-      expect(providerNoUser.errorMessage, isNotNull);
-      expect(providerNoUser.isLoading, false);
-    });
+        // White box: if (_user == null) throw Exception
+        expect(providerNoUser.errorMessage, isNotNull);
+        expect(providerNoUser.isLoading, false);
+      },
+    );
 
     test('updatePhotoBase64() berhasil update foto dan reload user', () async {
       when(mockLogin(any, any)).thenAnswer((_) async => mockUser);
       await provider.login('test@email.com', '123456');
 
-      when(mockDatasource.updatePhotoBase64(
-        uid: anyNamed('uid'),
-        base64: anyNamed('base64'),
-      )).thenAnswer((_) async {});
+      when(
+        mockDatasource.updatePhotoBase64(
+          uid: anyNamed('uid'),
+          base64: anyNamed('base64'),
+        ),
+      ).thenAnswer((_) async {});
 
       await provider.updatePhotoBase64('base64encoded');
 
       expect(provider.isLoading, false);
       expect(provider.errorMessage, isNull);
-      verify(mockDatasource.updatePhotoBase64(
-        uid: 'uid-123',
-        base64: 'base64encoded',
-      )).called(1);
+      verify(
+        mockDatasource.updatePhotoBase64(
+          uid: 'uid-123',
+          base64: 'base64encoded',
+        ),
+      ).called(1);
     });
 
-    test('isLoading menjadi true lalu false saat updatePhotoBase64()',
-        () async {
-      when(mockLogin(any, any)).thenAnswer((_) async => mockUser);
-      await provider.login('test@email.com', '123456');
+    test(
+      'isLoading menjadi true lalu false saat updatePhotoBase64()',
+      () async {
+        when(mockLogin(any, any)).thenAnswer((_) async => mockUser);
+        await provider.login('test@email.com', '123456');
 
-      when(mockDatasource.updatePhotoBase64(
-        uid: anyNamed('uid'),
-        base64: anyNamed('base64'),
-      )).thenAnswer((_) async {});
+        when(
+          mockDatasource.updatePhotoBase64(
+            uid: anyNamed('uid'),
+            base64: anyNamed('base64'),
+          ),
+        ).thenAnswer((_) async {});
 
-      final states = <bool>[];
-      provider.addListener(() => states.add(provider.isLoading));
+        final states = <bool>[];
+        provider.addListener(() => states.add(provider.isLoading));
 
-      await provider.updatePhotoBase64('base64encoded');
+        await provider.updatePhotoBase64('base64encoded');
 
-      expect(states, contains(true));
-      expect(provider.isLoading, false);
-    });
+        expect(states, contains(true));
+        expect(provider.isLoading, false);
+      },
+    );
   });
 
   // ════════════════════════════════════════════
   // GROUP: updateProfile()
   // ════════════════════════════════════════════
   group('updateProfile()', () {
-
     test('errorMessage terisi jika user null saat updateProfile()', () async {
       final providerNoUser = AuthProvider.forTest(
         login: mockLogin,
@@ -266,32 +274,38 @@ void main() {
       when(mockLogin(any, any)).thenAnswer((_) async => mockUser);
       await provider.login('test@email.com', '123456');
 
-      when(mockDatasource.updateUserProfile(
-        uid: anyNamed('uid'),
-        name: anyNamed('name'),
-        phone: anyNamed('phone'),
-      )).thenAnswer((_) async {});
+      when(
+        mockDatasource.updateUserProfile(
+          uid: anyNamed('uid'),
+          name: anyNamed('name'),
+          phone: anyNamed('phone'),
+        ),
+      ).thenAnswer((_) async {});
 
       await provider.updateProfile(name: 'Panji Baru', phone: '08999');
 
       expect(provider.isLoading, false);
       expect(provider.errorMessage, isNull);
-      verify(mockDatasource.updateUserProfile(
-        uid: 'uid-123',
-        name: 'Panji Baru',
-        phone: '08999',
-      )).called(1);
+      verify(
+        mockDatasource.updateUserProfile(
+          uid: 'uid-123',
+          name: 'Panji Baru',
+          phone: '08999',
+        ),
+      ).called(1);
     });
 
     test('isLoading menjadi true lalu false saat updateProfile()', () async {
       when(mockLogin(any, any)).thenAnswer((_) async => mockUser);
       await provider.login('test@email.com', '123456');
 
-      when(mockDatasource.updateUserProfile(
-        uid: anyNamed('uid'),
-        name: anyNamed('name'),
-        phone: anyNamed('phone'),
-      )).thenAnswer((_) async {});
+      when(
+        mockDatasource.updateUserProfile(
+          uid: anyNamed('uid'),
+          name: anyNamed('name'),
+          phone: anyNamed('phone'),
+        ),
+      ).thenAnswer((_) async {});
 
       final states = <bool>[];
       provider.addListener(() => states.add(provider.isLoading));
@@ -307,7 +321,6 @@ void main() {
   // GROUP: loadUser() — Test 4: Home / Beranda
   // ════════════════════════════════════════════
   group('loadUser()', () {
-
     test('loadUser() mengisi user jika loadUserFn mengembalikan data', () async {
       // White box: loadUser() → _loadUserFn → jika tidak null → _user = loaded
       await provider.loadUser('uid-123');
@@ -316,22 +329,24 @@ void main() {
       expect(provider.user!.uid, 'uid-123');
     });
 
-    test('loadUser() tidak mengubah user jika loadUserFn mengembalikan null',
-        () async {
-      final providerNoUser = AuthProvider.forTest(
-        login: mockLogin,
-        register: mockRegister,
-        logout: mockLogout,
-        updatePhoto: mockUpdatePhoto,
-        datasource: mockDatasource,
-        loadUserFn: (uid) async => null,
-      );
+    test(
+      'loadUser() tidak mengubah user jika loadUserFn mengembalikan null',
+      () async {
+        final providerNoUser = AuthProvider.forTest(
+          login: mockLogin,
+          register: mockRegister,
+          logout: mockLogout,
+          updatePhoto: mockUpdatePhoto,
+          datasource: mockDatasource,
+          loadUserFn: (uid) async => null,
+        );
 
-      await providerNoUser.loadUser('uid-999');
+        await providerNoUser.loadUser('uid-999');
 
-      // White box: if (loaded != null) tidak terpenuhi, _user tetap null
-      expect(providerNoUser.user, isNull);
-    });
+        // White box: if (loaded != null) tidak terpenuhi, _user tetap null
+        expect(providerNoUser.user, isNull);
+      },
+    );
 
     test('loadUser() memanggil notifyListeners jika data ditemukan', () async {
       final states = <bool>[];

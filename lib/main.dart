@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 import 'core/constants/app_routes.dart';
 import 'core/constants/app_route_generator.dart';
+import 'core/theme/app_theme.dart';
 import 'presentation/providers/auth_provider.dart';
 import 'presentation/providers/tips_kesehatan_provider.dart';
 
@@ -45,20 +46,7 @@ class MyApp extends StatelessWidget {
         initialRoute: AppRoutes.login,
         onGenerateRoute: AppRouteGenerator.generate,
 
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          useMaterial3: true,
-
-          progressIndicatorTheme: const ProgressIndicatorThemeData(
-            color: Colors.blue,        
-          ),
-
-          inputDecorationTheme: const InputDecorationTheme(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.blue, width: 2),
-            ),
-          ),
-        ),
+        theme: AppTheme.lightTheme,
       ),
     );
   }

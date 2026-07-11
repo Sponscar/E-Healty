@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:e_healty/core/utils/image_helper.dart';
 import 'package:e_healty/core/widgets/custom_text_field.dart';
 import 'package:e_healty/presentation/widgets/avatar_profile.dart';
@@ -40,14 +39,11 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       final picker = ImagePicker();
 
-      final image = await picker.pickImage(
-        source: ImageSource.gallery,
-      );
+      final image = await picker.pickImage(source: ImageSource.gallery);
 
       if (image == null) return;
 
-      final base64String =
-          await ImageHelper.compressToBase64(image.path);
+      final base64String = await ImageHelper.compressToBase64(image.path);
 
       if (base64String == null) {
         throw Exception("Gagal memproses gambar");
@@ -65,17 +61,13 @@ class _ProfilePageState extends State<ProfilePage> {
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.toString()),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
       );
     }
   }
 
   bool _validate() {
-    if (nameController.text.isEmpty ||
-        phoneController.text.isEmpty) {
+    if (nameController.text.isEmpty || phoneController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Nama dan No HP tidak boleh kosong"),
@@ -96,10 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         title: const Text(
           "Profil Saya",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -170,8 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content:
-                              Text("Profil berhasil diperbarui"),
+                          content: Text("Profil berhasil diperbarui"),
                           backgroundColor: Colors.green,
                         ),
                       );
@@ -183,10 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
             CustomButton(
               text: "Kembali ke Home",
               onPressed: () {
-                Navigator.pushReplacementNamed(
-                  context,
-                  AppRoutes.home,
-                );
+                Navigator.pushReplacementNamed(context, AppRoutes.home);
               },
             ),
           ],

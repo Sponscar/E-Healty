@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_routes.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
@@ -8,7 +10,7 @@ import '../../../core/widgets/loading_indicator.dart';
 import '../../providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -30,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _handleLogin(AuthProvider auth) async {
-
     auth.clearError();
 
     if (!_formKey.currentState!.validate()) return;
@@ -73,28 +74,22 @@ class _LoginPageState extends State<LoginPage> {
     final auth = context.watch<AuthProvider>();
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
             const SizedBox(height: 60),
 
-            Image.asset(
-              'assets/images/logo.png',
-              width: 260,
-              height: 260,
-            ),
+            Image.asset('assets/images/logo.png', width: 260, height: 260),
 
             const SizedBox(height: 16),
 
-            const Text(
+            Text(
               "Selamat Datang di E-Healthy",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
+              style: AppTextStyles.heading2.copyWith(
+                color: AppColors.primaryBlue,
               ),
             ),
 
