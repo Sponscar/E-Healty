@@ -10,8 +10,11 @@ import '../../presentation/pages/tips_kesehatan/tips_kesehatan_detail_page.dart'
 import '../../presentation/pages/aktivitas_sehat/aktivitas_page.dart';
 import '../../presentation/pages/aktivitas_sehat/add_aktivitas_page.dart';
 
-import '../../presentation/pages/admin/admin_dasboard_page.dart';
-import '../../presentation/pages/admin/manage_tips_page.dart';
+// ADMIN IMPORTS - DISABLED
+// import '../../presentation/pages/admin/admin_dasboard_page.dart';
+// import '../../presentation/pages/admin/admin_setup_page.dart';
+// import '../../presentation/pages/admin/data_pengguna_page.dart';
+// import '../../presentation/pages/admin/manage_tips_page.dart';
 
 import 'app_routes.dart';
 
@@ -54,16 +57,26 @@ class AppRouteGenerator {
           builder: (_) => const AddAktivitasPage(),
         );
 
-      // ===== ADMIN =====
-      case AppRoutes.adminDashboard:
-        return MaterialPageRoute(
-          builder: (_) => const AdminDashboardPage(),
-        );
+      // ===== ADMIN - DISABLED =====
+      // case AppRoutes.adminDashboard:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const AdminDashboardPage(),
+      //   );
 
-      case AppRoutes.manageTips:
-        return MaterialPageRoute(
-          builder: (_) => const ManageTipsPage(),
-        );
+      // case AppRoutes.adminSetup:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const AdminSetupPage(),
+      //   );
+
+      // case AppRoutes.dataPengguna:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const DataPenggunaPage(),
+      //   );
+
+      // case AppRoutes.manageTips:
+      //   return MaterialPageRoute(
+      //     builder: (_) => const ManageTipsPage(),
+      //   );
 
       default:
         return MaterialPageRoute(

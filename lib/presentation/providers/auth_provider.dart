@@ -6,6 +6,7 @@ import 'package:e_healty/domain/usecase/auth/logout.dart';
 import 'package:e_healty/domain/usecase/auth/register.dart';
 import 'package:e_healty/domain/usecase/auth/update_photo.dart';
 import 'package:flutter/material.dart';
+import '../../core/utils/firebase_error_mapper.dart';
 
 import '../../data/datasources/firebase_auth_datasource.dart';
 import '../../data/repositories/auth_repository.dart';
@@ -81,7 +82,7 @@ class AuthProvider extends ChangeNotifier {
       if (loaded != null) _user = loaded;
 
     } catch (e) {
-      _errorMessage = "Email atau password salah";
+      _errorMessage = FirebaseErrorMapper.mapAuthError(e);
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -107,7 +108,7 @@ class AuthProvider extends ChangeNotifier {
       _user = await _register(email, password, name, phone);
 
     } catch (e) {
-      _errorMessage = "Email sudah terdaftar atau terjadi kesalahan";
+      _errorMessage = FirebaseErrorMapper.mapAuthError(e);
       _user = null;
     } finally {
       _isLoading = false;

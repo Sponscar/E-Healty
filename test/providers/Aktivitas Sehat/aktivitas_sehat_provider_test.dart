@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:e_healty/data/models/aktivitas_model.dart';
 import 'package:e_healty/presentation/providers/aktivitas_sehat_provider.dart';
 import 'package:e_healty/presentation/providers/auth_provider.dart';
+import 'package:e_healty/core/utils/network_helper.dart';
 import './mocks.mocks.dart';
 
 // ─── Helper: buat BuildContext palsu dengan Provider ───
@@ -48,6 +49,13 @@ void main() {
 
     when(mockAuth.user).thenReturn(mockUserEntity);
     when(mockUserEntity.uid).thenReturn('user-123');
+
+    // Skip cek internet saat testing
+    NetworkHelper.skipNetworkCheck = true;
+  });
+
+  tearDown(() {
+    NetworkHelper.skipNetworkCheck = false;
   });
 
   // ════════════════════════════════════════════

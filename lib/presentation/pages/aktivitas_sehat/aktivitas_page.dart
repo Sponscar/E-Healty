@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/aktivitas_sehat_provider.dart';
 import '../../../core/constants/app_routes.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/custom_button.dart';
+import '../../widgets/custom_app_bar.dart';
 
 class AktivitasSehatPage extends StatefulWidget {
   const AktivitasSehatPage({super.key});
@@ -81,18 +83,8 @@ class _AktivitasSehatPageState extends State<AktivitasSehatPage> {
     final p = context.watch<AktivitasSehatProvider>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Aktivitas Sehat",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
+      backgroundColor: AppColors.offWhite,
+      appBar: const CustomAppBar(title: "Aktivitas Sehat"),
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.blue,

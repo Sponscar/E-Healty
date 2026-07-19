@@ -3,6 +3,7 @@ import 'package:mockito/mockito.dart';
 
 import 'package:e_healty/domain/entities/tips_kesehatan.dart';
 import 'package:e_healty/presentation/providers/tips_kesehatan_provider.dart';
+import 'package:e_healty/core/utils/network_helper.dart';
 import './mocks.mocks.dart';
 
 void main() {
@@ -36,6 +37,13 @@ void main() {
       getAll: mockGetAll,
       getDetail: mockGetDetail,
     );
+
+    // Skip cek internet saat testing
+    NetworkHelper.skipNetworkCheck = true;
+  });
+
+  tearDown(() {
+    NetworkHelper.skipNetworkCheck = false;
   });
 
   // ════════════════════════════════════════════════════════

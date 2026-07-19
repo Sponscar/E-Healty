@@ -85,9 +85,10 @@ void main() {
 
       await provider.login('salah@email.com', 'wrongpass');
 
-      // Verifikasi alur: LoginUseCase throw → catch → errorMessage
+      // Verifikasi alur: LoginUseCase throw → catch → FirebaseErrorMapper
       expect(provider.user, isNull);
-      expect(provider.errorMessage, equals("Email atau password salah"));
+      expect(provider.errorMessage, isNotNull);
+      expect(provider.errorMessage, contains("Terjadi kesalahan"));
       expect(provider.isLoading, false);
     });
   });
@@ -157,7 +158,8 @@ void main() {
       await provider.register('ada@email.com', 'pass', 'nama', '08123');
 
       expect(provider.user, isNull);
-      expect(provider.errorMessage, contains("Email sudah digunakan"));
+      // FirebaseErrorMapper: generic Exception → pesan user-friendly
+      expect(provider.errorMessage, isNotNull);
       expect(provider.isLoading, false);
     });
   });

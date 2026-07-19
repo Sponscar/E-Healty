@@ -36,10 +36,14 @@ class ProfileAvatar extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 55,
-            backgroundColor: Colors.blue.shade100,
+            backgroundColor: Colors.transparent,
             backgroundImage: imageProvider,
             child: imageProvider == null
-                ? const Icon(Icons.person, size: 60, color: Colors.blue)
+                ? CircleAvatar(
+                    radius: 55,
+                    backgroundColor: Colors.white.withOpacity(0.2),
+                    child: const Icon(Icons.person, size: 60, color: Colors.white),
+                  )
                 : null,
           ),
 

@@ -41,6 +41,15 @@ class TipsKesehatanProvider extends ChangeNotifier {
       _errorMessage = null;
       notifyListeners();
 
+      // Cek koneksi internet
+      final hasInternet = await NetworkHelper.hasInternetConnection();
+      if (!hasInternet) {
+        _errorMessage = "Tidak ada koneksi internet. Periksa koneksi Anda.";
+        _loading = false;
+        notifyListeners();
+        return;
+      }
+
       _list = await _getAll();
 
     } catch (e) {
@@ -52,7 +61,12 @@ class TipsKesehatanProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<TipsKesehatanEntity> detail(String id) {
+  Future<TipsKesehatanEntity> detail(String id) async {
+    // Cek koneksi internet
+    final hasInternet = await NetworkHelper.hasInternetConnection();
+    if (!hasInternet) {
+      throw Exception('Tidak ada koneksi internet. Periksa koneksi Anda.');
+    }
     return _getDetail(id);
   }
 }

@@ -7,6 +7,7 @@ import '../../../core/utils/validators.dart';
 import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../../../core/widgets/loading_indicator.dart';
+import '../../../core/utils/network_helper.dart';
 import '../../providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -36,6 +37,19 @@ class _LoginPageState extends State<LoginPage> {
 
     if (!_formKey.currentState!.validate()) return;
 
+    // Cek koneksi internet sebelum login
+    final hasInternet = await NetworkHelper.hasInternetConnection();
+    if (!hasInternet) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Tidak ada koneksi internet. Periksa koneksi Anda."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     await auth.login(
       emailController.text.trim(),
       passwordController.text.trim(),
@@ -60,13 +74,16 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
-    final role = auth.user?.role ?? 'user';
-
-    if (role == 'admin') {
-      Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
-    } else {
-      Navigator.pushReplacementNamed(context, AppRoutes.home);
-    }
+    // ADMIN NAVIGATION - DISABLED (Firebase Console access required)
+    // final role = auth.user?.role ?? 'user';
+    // if (role == 'admin') {
+    //   Navigator.pushReplacementNamed(context, AppRoutes.adminDashboard);
+    // } else {
+    //   Navigator.pushReplacementNamed(context, AppRoutes.home);
+    // }
+    
+    // All users go to home page
+    Navigator.pushReplacementNamed(context, AppRoutes.home);
   }
 
   @override

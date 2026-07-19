@@ -71,13 +71,19 @@ class AktivitasSehatProvider extends ChangeNotifier {
     String? imageBase64,
   }) async {
 
-    // ← MODIFIKASI: validasi input
-  if (judul.trim().isEmpty) {
-    throw ArgumentError('Judul tidak boleh kosong');
-  }
-  if (deskripsi.trim().isEmpty) {
-    throw ArgumentError('Deskripsi tidak boleh kosong');
-  }
+    // Validasi input
+    if (judul.trim().isEmpty) {
+      throw ArgumentError('Judul tidak boleh kosong');
+    }
+    if (deskripsi.trim().isEmpty) {
+      throw ArgumentError('Deskripsi tidak boleh kosong');
+    }
+
+    // Cek koneksi internet
+    final hasInternet = await NetworkHelper.hasInternetConnection();
+    if (!hasInternet) {
+      throw Exception('Tidak ada koneksi internet. Periksa koneksi Anda.');
+    }
 
     final model = AktivitasModel(
       id: const Uuid().v4(),
@@ -96,14 +102,42 @@ class AktivitasSehatProvider extends ChangeNotifier {
     BuildContext c,
     AktivitasModel m,
   ) async {
-    await _update(m);
-    await load(c);
+    // Validasi input
+    if (m.judul.trim().isEmpty) {
+      throw ArgumentError('Judul tidak boleh kosong');
+    }
+    if (m.deskripsi.trim().isEmpty) {
+      throw ArgumentError('Deskripsi tidak boleh kosong');
+    }
+
+    try {
+      loading = true;
+      errorMessage = null;
+      notifyListeners();
+
+      await _update(m);
+      await load(c);
+
+    } catch (e) {
+      errorMessage = NetworkHelper.getErrorMessage(e);
+      debugPrint(e.toString());
+      rethrow; // Re-throw agar UI bisa handle
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
   }
 
   Future<void> remove(
     BuildContext c,
     String id,
   ) async {
+    // Cek koneksi internet
+    final hasInternet = await NetworkHelper.hasInternetConnection();
+    if (!hasInternet) {
+      throw Exception('Tidak ada koneksi internet. Periksa koneksi Anda.');
+    }
+
     await _delete(_uid(c), id);
     await load(c);
   }

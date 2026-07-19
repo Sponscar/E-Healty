@@ -10,6 +10,9 @@ class AppRoutes {
   static const String aktivitasSehat = "/aktivitas-sehat";
   static const String addAktivitas = "/add-aktivitas";
 
-  static const String adminDashboard = "/admin-dashboard";
-  static const String manageTips = "/manage-tips";
+  // ADMIN ROUTES - DISABLED (Firebase Console access required)
+  // static const String adminDashboard = "/admin-dashboard";
+  // static const String adminSetup = "/admin-setup";
+  // static const String dataPengguna = "/data-pengguna";
+  // static const String manageTips = "/manage-tips";
 }

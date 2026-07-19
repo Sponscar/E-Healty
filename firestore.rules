@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function untuk cek apakah user sudah login
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function untuk cek apakah user adalah admin
+    function isAdmin() {
+      return isAuthenticated() && 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Helper function untuk cek apakah user adalah pemilik data
+    function isOwner(uid) {
+      return isAuthenticated() && request.auth.uid == uid;
+    }
+    
+    // Rules untuk collection users
+    match /users/{userId} {
+      // Semua user bisa baca data user lain
+      allow read: if isAuthenticated();
+      
+      // Hanya pemilik yang bisa update data sendiri
+      allow update: if isOwner(userId);
+      
+      // Admin bisa baca semua dan update semua
+      allow read, write: if isAdmin();
+      
+      // Allow create saat register (tidak perlu auth)
+      allow create: if true;
+    }
+    
+    // Rules untuk collection tips_kesehatan
+    match /tips_kesehatan/{tipId} {
+      // Semua user yang login bisa membaca tips
+      allow read: if isAuthenticated();
+      
+      // Hanya admin yang bisa create, update, delete tips
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Rules untuk collection aktivitas_sehat
+    match /aktivitas_sehat/{aktivitasId} {
+      // User hanya bisa baca aktivitas milik sendiri
+      allow read: if isAuthenticated() && 
+                     resource.data.uid == request.auth.uid;
+      
+      // User hanya bisa create aktivitas untuk diri sendiri
+      allow create: if isAuthenticated() && 
+                       request.resource.data.uid == request.auth.uid;
+      
+      // User hanya bisa update/delete aktivitas milik sendiri
+      allow update, delete: if isAuthenticated() && 
+                               resource.data.uid == request.auth.uid;
+      
+      // Admin bisa akses semua aktivitas
+      allow read, write: if isAdmin();
+    }
+  }
+}

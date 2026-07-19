@@ -6,6 +6,7 @@ import '../../../core/widgets/custom_button.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../../../core/widgets/loading_indicator.dart';
 import '../../providers/auth_provider.dart';
+import '../../../core/utils/network_helper.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -38,6 +39,19 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> _onRegister(AuthProvider auth) async {
     if (!_formKey.currentState!.validate()) return;
+
+    // Cek koneksi internet sebelum register
+    final hasInternet = await NetworkHelper.hasInternetConnection();
+    if (!hasInternet) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Tidak ada koneksi internet. Periksa koneksi Anda."),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
 
     await auth.register(
       emailController.text.trim(),

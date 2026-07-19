@@ -58,34 +58,24 @@ class AdminDashboardPage extends StatelessWidget {
 
             const SizedBox(height: 12),
 
-            _buildMenuCard(
-              context,
-              title: "Kelola Tips Kesehatan",
-              icon: Icons.health_and_safety,
-              onTap: () {
-                Navigator.pushNamed(context, AppRoutes.manageTips);
-              },
-            ),
+            // ADMIN MENUS - DISABLED
+            // _buildMenuCard(
+            //   context,
+            //   title: "Kelola Tips Kesehatan",
+            //   icon: Icons.health_and_safety,
+            //   onTap: () {
+            //     Navigator.pushNamed(context, AppRoutes.manageTips);
+            //   },
+            // ),
 
-            _buildMenuCard(
-              context,
-              title: "Kelola Aktivitas Sehat",
-              icon: Icons.directions_run,
-              onTap: () {
-                Navigator.pushNamed(context, AppRoutes.aktivitasSehat);
-              },
-            ),
-
-            _buildMenuCard(
-              context,
-              title: "Data Pengguna",
-              icon: Icons.people,
-              onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Fitur belum dibuat")),
-                );
-              },
-            ),
+            // _buildMenuCard(
+            //   context,
+            //   title: "Data Pengguna",
+            //   icon: Icons.people,
+            //   onTap: () {
+            //     Navigator.pushNamed(context, AppRoutes.dataPengguna);
+            //   },
+            // ),
           ],
         ),
       ),

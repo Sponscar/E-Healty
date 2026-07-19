@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/app_routes.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../providers/tips_kesehatan_provider.dart';
 import '../../widgets/custom_app_bar.dart';
 
@@ -30,6 +31,7 @@ class _TipsKesehatanListPageState
     final provider = context.watch<TipsKesehatanProvider>();
 
     return Scaffold(
+      backgroundColor: AppColors.offWhite,
       appBar: const CustomAppBar(title: "Tips Kesehatan"),
 
       body: provider.loading
@@ -78,23 +80,12 @@ class _TipsKesehatanListPageState
                     final tips = provider.list[i];
 
                     return Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.only(bottom: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      child: ListTile(
-                        leading: _buildImage(tips.imageUrl),
-
-                        title: Text(
-                          tips.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-
-                        subtitle: Text(
-                          "By ${tips.author}",
-                          style: const TextStyle(fontSize: 12),
-                        ),
-
+                      child: InkWell(
                         onTap: () {
                           Navigator.pushNamed(
                             context,
@@ -102,6 +93,68 @@ class _TipsKesehatanListPageState
                             arguments: tips.id,
                           );
                         },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: _buildImage(tips.imageUrl),
+                              ),
+
+                              const SizedBox(width: 16),
+
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      tips.title,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.person_outline,
+                                          size: 14,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Expanded(
+                                          child: Text(
+                                            tips.author,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     );
                   },

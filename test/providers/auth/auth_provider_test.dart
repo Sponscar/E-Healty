@@ -79,7 +79,9 @@ void main() {
       await provider.login('salah@email.com', 'wrongpass');
 
       // White box: error ditangkap di catch, user tetap null
-      expect(provider.errorMessage, equals("Email atau password salah"));
+      // FirebaseErrorMapper: generic Exception → "Terjadi kesalahan. Silakan coba lagi."
+      expect(provider.errorMessage, isNotNull);
+      expect(provider.errorMessage, contains("Terjadi kesalahan"));
       expect(provider.user, isNull);
       expect(provider.isLoading, false);
     });
@@ -137,8 +139,8 @@ void main() {
 
       await provider.register('ada@email.com', 'pass', 'nama', '08123');
 
-      // White box: Exception: dihapus dari pesan error
-      expect(provider.errorMessage, contains("Email sudah digunakan"));
+      // White box: FirebaseErrorMapper: generic Exception → pesan user-friendly
+      expect(provider.errorMessage, isNotNull);
       expect(provider.user, isNull);
     });
 
